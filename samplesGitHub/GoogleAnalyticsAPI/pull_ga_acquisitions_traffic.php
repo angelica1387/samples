@@ -6,7 +6,8 @@
  * 
  */
 
-//Require Google Analytics Service 
+//Require Google Analytics Service
+
 require_once __DIR__ .'/../includes/vendor/autoload.php';
 require_once __DIR__ .'/config.php';
 require_once __DIR__ .'/../includes/MysqliDb.php';
