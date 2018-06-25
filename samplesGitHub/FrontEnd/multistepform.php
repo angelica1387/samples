@@ -222,60 +222,59 @@
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
   <script type="text/javascript" src="//cdn.datatables.net/plug-ins/1.10.13/sorting/datetime-moment.js"></script>
   <script type="text/javascript">
-		  $(document).ready(function(){
+  $(document).ready(function(){
         /* Multi step form*/	
-          var navListItems = $('ul.setup-panel li a'),
-          allWells = $('.setup-content'),
-          allNextBtn = $('.nextBtn'),
-          allPrevBtn = $('.prevBtn');
+	var navListItems = $('ul.setup-panel li a'),
+	allWells = $('.setup-content'),
+	allNextBtn = $('.nextBtn'),
+	allPrevBtn = $('.prevBtn');
 
+    allWells.hide();
+
+    navListItems.click(function (e) {
+		
+		if($(this).attr("disabled") !== undefined){
+			return;
+		}
+		e.preventDefault();
+        var $target = $($(this).attr('href')),
+            $item = $(this);
+        if (!$item.parent().hasClass('disabled')) {
+            $('ul.setup-panel li').removeClass('active');
+            $item.parent().addClass('active');
             allWells.hide();
+            $target.show();
+            $target.find('input:eq(0)').focus();
+        }
+    });
 
-            navListItems.click(function (e) {
-                e.preventDefault();
-                var $target = $($(this).attr('href')),
-                    $item = $(this);
+    allPrevBtn.click(function(){
+        var curStep = $(this).closest(".setup-content"),
+            curStepBtn = curStep.attr("id"),
+            prevStepSteps = $('ul.setup-panel li a[href="#' + curStepBtn + '"]').parent().prev().children("a");
 
-                if (!$item.hasClass('disabled')) {
-                    navListItems.removeClass('active');
-                    $item.addClass('active');
-                    allWells.hide();
-                    $target.show();
-                    $target.find('input:eq(0)').focus();
-                }
-            });
+            prevStepSteps.removeAttr('disabled').trigger('click');
+    });
 
-            allPrevBtn.click(function(){
-                var curStep = $(this).closest(".setup-content"),
-                    curStepBtn = curStep.attr("id"),
-                    prevStepSteps = $('ul.setup-panel li a[href="#' + curStepBtn + '"]').parent().prev().children("a");
-
-                    prevStepSteps.removeAttr('disabled').trigger('click');
-            });
-
-            allNextBtn.click(function(){
-                var curStep = $(this).closest(".setup-content"),
-                    curStepBtn = curStep.attr("id"),
-                    nextStepWizard = $('ul.setup-panel li a[href="#' + curStepBtn + '"]').parent().next().children("a"),
-                    curInputs = curStep.find("input,textarea,select").filter('[required]:visible'),
-                   // curInputs = curStep.find("input[type='select'],input[type='text']"),
-                    isValid = true;
-              console.log(curStep);
-              console.log(curInputs);
-              return;
-                $(".form-group").removeClass("has-error");
-                for(var i=0; i< curInputs.length; i++){
-                    if (!curInputs[i].validity.valid){
-                        isValid = false;
-                        $(curInputs[i]).closest(".form-group").addClass("has-error");
-                    }
-                }
-
-                if (isValid)
-                    nextStepWizard.removeAttr('disabled').trigger('click');
-            });
-
-            $('ul.setup-panel li a.active').trigger('click');
+    allNextBtn.click(function(){
+        var curStep = $(this).closest(".setup-content"),
+            curStepBtn = curStep.attr("id"),
+            nextStepWizard = $('ul.setup-panel li a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+            curInputs = curStep.find("input,textarea,select").filter('[required]:visible'),
+           // curInputs = curStep.find("input[type='select'],input[type='text']"),
+            isValid = true;			
+        $(".form-group").removeClass("has-error");
+        for(var i=0; i< curInputs.length; i++){
+            if (!curInputs[i].validity.valid){
+                isValid = false;
+                $(curInputs[i]).closest(".form-group").addClass("has-error");
+            }
+        }
+        if (isValid)
+            nextStepWizard.removeAttr('disabled').trigger('click');
+    });
+	
+	$('ul.setup-panel li.active').children( "a" ).trigger('click');
 
 
 
